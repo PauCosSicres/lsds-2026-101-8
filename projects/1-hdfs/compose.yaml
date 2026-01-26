@@ -1,0 +1,8 @@
+services:
+  namenode:
+    build: ./namenode/app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./namenode/settings.json:/code/settings.json
+      - ./namenode/checkpoint.json:/code/checkpoint.json
