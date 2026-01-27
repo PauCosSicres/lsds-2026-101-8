@@ -11,8 +11,8 @@ def reduce(key: str, values: list) -> str:
     return str(len(values))
 
 
-def partitioner(key: str, partition_count: int) -> int:
+def partitioner(key: str, partition_count: int) -> str:
     hash_value = 0
     for i, char in enumerate(key):
         hash_value = (hash_value * 16777619 + ord(char)) % partition_count
-    return hash_value
+    return str(hash_value)
