@@ -2,20 +2,29 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 app = FastAPI()
-blocks = {}
 
-@app.get("/healthcheck")
-def healthcheck():
-    return {"status": "up"}
 
-class Block(BaseModel):
-    block_id: int
-    data: str
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
-@app.put("/block")
-def put_block(block: Block):
-    blocks[block.block_id] = block.data
-    return {
-        "message": "block stored",
-        "block_id": block.block_id
-    }
+
+@app.get("/info")
+def read_info():
+    return {"studentId": 555, "universityName": "upf"}
+
+class Operate(BaseModel):
+    x: int
+    y: int
+
+@app.post("/sum")
+def sum(sum: Operate):
+    return {f"result: {sum.x + sum.y}"}
+
+@app.post("/multiply/{int1}/{int2}")
+def multiply(int1: int, int2: int):
+    return {f"result: {int1 * int2}"}
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Union[str, None] = None):
+    return {"item_id": item_id, "q": q}
