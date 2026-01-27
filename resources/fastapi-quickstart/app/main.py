@@ -12,9 +12,14 @@ def read_root():
 
 @app.get("/info")
 def read_info():
-    return {"studentId": 123, "universityName": "upf"}
+    return {"studentId": 555, "universityName": "upf"}
 
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
+
+
+@app.get("/healthcheck")
+def healthcheck():
+    return {"status": "up"}
