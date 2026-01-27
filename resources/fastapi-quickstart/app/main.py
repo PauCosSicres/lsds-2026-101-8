@@ -1,25 +1,21 @@
-from typing import Union
-
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/info")
-def read_info():
-    return {"studentId": 555, "universityName": "upf"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
+blocks = {}
 
 @app.get("/healthcheck")
 def healthcheck():
     return {"status": "up"}
+
+class Block(BaseModel):
+    block_id: int
+    data: str
+
+@app.put("/block")
+def put_block(block: Block):
+    blocks[block.block_id] = block.data
+    return {
+        "message": "block stored",
+        "block_id": block.block_id
+    }
