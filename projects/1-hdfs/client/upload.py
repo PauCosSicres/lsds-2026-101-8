@@ -6,7 +6,8 @@ NAMENODE = "http://localhost:8000"
 
 def main():
     local_path = Path(sys.argv[1])
-    filename = local_path.name
+    filename = sys.argv[2]
+
 
     # read local file
     data = local_path.read_bytes()
