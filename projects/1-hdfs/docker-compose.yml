@@ -1,29 +1,31 @@
 services:
   namenode:
     build: ./namenode/app
+    container_name: namenode_service
     ports:
       - "8000:80"
     volumes:
       - ./namenode/settings.json:/code/settings.json
       - ./namenode/checkpoint.json:/code/checkpoint.json
+      - ./namenode/journal:/code/journal
 
   datanode1:
     build: ./datanode/app
     ports:
       - "8001:80"
     volumes:
-    - ./datanode/storage:/code/storage
+      - ./datanode/storage/datanode_1:/code/storage
 
   datanode2:
     build: ./datanode/app
     ports:
       - "8002:80"
     volumes:
-    - ./datanode/storage:/code/storage
+      - ./datanode/storage/datanode_2:/code/storage
 
   datanode3:
     build: ./datanode/app
     ports:
       - "8003:80"
     volumes:
-    - ./datanode/storage:/code/storage
+      - ./datanode/storage/datanode_3:/code/storage
