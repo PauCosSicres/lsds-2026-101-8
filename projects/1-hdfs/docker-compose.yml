@@ -1,0 +1,29 @@
+services:
+  namenode:
+    build: ./namenode/app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./namenode/settings.json:/code/settings.json
+      - ./namenode/checkpoint.json:/code/checkpoint.json
+
+  datanode1:
+    build: ./datanode/app
+    ports:
+      - "8001:80"
+    volumes:
+    - ./datanode/storage:/code/storage
+
+  datanode2:
+    build: ./datanode/app
+    ports:
+      - "8002:80"
+    volumes:
+    - ./datanode/storage:/code/storage
+
+  datanode3:
+    build: ./datanode/app
+    ports:
+      - "8003:80"
+    volumes:
+    - ./datanode/storage:/code/storage
