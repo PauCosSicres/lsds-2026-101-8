@@ -1,0 +1,290 @@
+{
+    "advanced": [
+        {
+            "name": "test_namenode_block_report_api",
+            "submitted": false,
+            "description": "The NameNode exposes an API endpoint to receive block reports from DataNodes.",
+            "related_exercise": "1.3.5",
+            "max_marks": 5,
+            "marks": 0
+        },
+        {
+            "name": "test_namenode_blocks_to_remove",
+            "submitted": false,
+            "description": "The NameNode responds to block reports with a list of blocks that should be removed.",
+            "related_exercise": "1.3.5",
+            "max_marks": 10,
+            "marks": 0
+        },
+        {
+            "name": "test_datanode_removes_blocks",
+            "submitted": false,
+            "description": "A DataNode removes all blocks that have been indicated for deletion by the NameNode.",
+            "related_exercise": "1.3.5",
+            "max_marks": 5,
+            "marks": 0
+        },
+        {
+            "name": "test_namenode_tracks_blocks_per_datanode",
+            "submitted": false,
+            "description": "The NameNode keeps track of which blocks are stored in each DataNode.",
+            "related_exercise": "1.3.6",
+            "max_marks": 5,
+            "marks": 0
+        },
+        {
+            "name": "test_underreplicated_blocks_added_to_queue",
+            "submitted": false,
+            "description": "Underreplicated blocks are added to the replication queue by the NameNode.",
+            "related_exercise": "1.3.6",
+            "max_marks": 10,
+            "marks": 0
+        },
+        {
+            "name": "test_namenode_instructs_replication_of_underreplicated_blocks",
+            "submitted": false,
+            "description": "The NameNode instructs DataNodes to replicate underreplicated blocks they own to other DataNodes in the next block report response.",
+            "related_exercise": "1.3.6",
+            "max_marks": 10,
+            "marks": 0
+        },
+        {
+            "name": "test_namenode_tracks_last_block_report",
+            "submitted": false,
+            "description": "Check that the NameNode keeps track of the last time each DataNode sent a block report.",
+            "related_exercise": "1.3.7",
+            "max_marks": 5,
+            "marks": 0
+        },
+        {
+            "name": "test_missing_blocks_added_to_replication_queue",
+            "submitted": false,
+            "description": "Check that the NameNode adds missing blocks from a down DataNode to the replication queue.",
+            "related_exercise": "1.3.7",
+            "max_marks": 5,
+            "marks": 0
+        }
+    ],
+    "difficult": [
+        {
+            "name": "test_journal",
+            "submitted": true,
+            "description": "The journal must track namespace operations.",
+            "related_exercise": "1.2.7",
+            "max_marks": 7,
+            "marks": 5
+        },
+        {
+            "name": "test_write_pipeline",
+            "submitted": true,
+            "description": "DataNode must support write pipelines and forward blocks to the next DataNode.",
+            "related_exercise": "1.3.4",
+            "max_marks": 10,
+            "marks": 10
+        }
+    ],
+    "nice_to_have": [
+        {
+            "name": "test_delete_file_204",
+            "submitted": true,
+            "description": "DELETE /files/{filename} should return 204 for existing file.",
+            "related_exercise": "1.2.6",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_delete_file_404",
+            "submitted": true,
+            "description": "DELETE /files/{filename} should return 404 after the file was already deleted.",
+            "related_exercise": "1.2.6",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_client_list_datanodes",
+            "submitted": true,
+            "description": "Client lists all datanodes correctly",
+            "related_exercise": "1.4.1",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_client_upload_file",
+            "submitted": true,
+            "description": "Client uploads a file correctly",
+            "related_exercise": "1.4.2",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_client_upload_file_replicas",
+            "submitted": true,
+            "description": "All datanodes have replicas of the blocks",
+            "related_exercise": "1.4.2",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_client_download_file",
+            "submitted": true,
+            "description": "Client downloads a file correctly",
+            "related_exercise": "1.4.3",
+            "max_marks": 10,
+            "marks": 10
+        },
+        {
+            "name": "test_client_upload_download_failover",
+            "submitted": true,
+            "description": "Client upload/download failover is implemented correctly.",
+            "related_exercise": "1.4.4",
+            "max_marks": 5,
+            "marks": 0
+        }
+    ],
+    "essential": [
+        {
+            "name": "test_healthcheck_status",
+            "submitted": true,
+            "description": "namenode /healthcheck must return status 200.",
+            "related_exercise": "1.2.1",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_healthcheck_body",
+            "submitted": true,
+            "description": "namenode /healthcheck must return {\"status\": \"up\"}",
+            "related_exercise": "1.2.1",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_datanodes_status",
+            "submitted": true,
+            "description": "/datanodes must respond with 200 OK.",
+            "related_exercise": "1.2.2",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_datanodes_content",
+            "submitted": true,
+            "description": "/datanodes must return the exact list of datanodes from settings.json.",
+            "related_exercise": "1.2.2",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_create_file_200",
+            "submitted": true,
+            "description": "POST /files must return 200 OK when creating a new file.",
+            "related_exercise": "1.2.3",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_create_file_duplicate",
+            "submitted": true,
+            "description": "Creating a file twice must return 409.",
+            "related_exercise": "1.2.3",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_get_file_status",
+            "submitted": true,
+            "description": "GET /files/{filename} must return 200 for an existing file.",
+            "related_exercise": "1.2.4",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_get_file_not_found",
+            "submitted": true,
+            "description": "GET /files/{filename} for an unknown file must return 404.",
+            "related_exercise": "1.2.4",
+            "max_marks": 3,
+            "marks": 3
+        },
+        {
+            "name": "test_add_block_200",
+            "submitted": true,
+            "description": "POST /files/{filename}/blocks should return 200 for valid file.",
+            "related_exercise": "1.2.5",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_add_block_structure",
+            "submitted": true,
+            "description": "After adding first block, it must appear in the file's block list.",
+            "related_exercise": "1.2.5",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_add_block_missing_file",
+            "submitted": true,
+            "description": "Adding a block to a non-existent file must return 404.",
+            "related_exercise": "1.2.5",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_round_robin",
+            "submitted": true,
+            "description": "Round-robin placement must rotate replicas across datanodes in order 1 \u2192 2 \u2192 3 \u2192 1 \u2192 ...",
+            "related_exercise": "1.2.5",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_datanode1_healthcheck",
+            "submitted": true,
+            "description": "/healthcheck must return 200 OK and {\"status\": \"up\"} for DataNode 1.",
+            "related_exercise": "1.3.1",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_datanode2_healthcheck",
+            "submitted": true,
+            "description": "/healthcheck must return 200 OK and {\"status\": \"up\"} for DataNode 2.",
+            "related_exercise": "1.3.1",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_datanode3_healthcheck",
+            "submitted": true,
+            "description": "/healthcheck must return 200 OK and {\"status\": \"up\"} for DataNode 3.",
+            "related_exercise": "1.3.1",
+            "max_marks": 1,
+            "marks": 1
+        },
+        {
+            "name": "test_write_block_datanode1",
+            "submitted": true,
+            "description": "PUT /files/{filename}/blocks/{block_number} must store the block on disk.",
+            "related_exercise": "1.3.2",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_read_block_datanode1",
+            "submitted": true,
+            "description": "GET /files/{filename}/blocks/{block_number} must return the correct block content.",
+            "related_exercise": "1.3.3",
+            "max_marks": 5,
+            "marks": 5
+        },
+        {
+            "name": "test_read_block_not_found",
+            "submitted": true,
+            "description": "GET /files/{filename}/blocks/{block_number} must return 404 if block does not exist.",
+            "related_exercise": "1.3.3",
+            "max_marks": 1,
+            "marks": 1
+        }
+    ]
+}
