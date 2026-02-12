@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /code
 
-RUN pip install fastapi uvicorn
+RUN pip install fastapi uvicorn httpx
 
 COPY . .
 
