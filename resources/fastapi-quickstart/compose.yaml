@@ -1,6 +1,5 @@
-name: fastapi-quickstart
 services:
-  fastapiquickstart:
+  fastapi-quickstart:
     build: .
     ports:
-      - "8000:80"
+      - "9000:80"
