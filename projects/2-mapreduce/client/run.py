@@ -2,7 +2,7 @@ import sys
 import time
 import httpx
 
-MASTER = "http://master:8000"
+MASTER = "http://localhost:8000"
 
 
 def create_job(data, maps, reduces, app):
