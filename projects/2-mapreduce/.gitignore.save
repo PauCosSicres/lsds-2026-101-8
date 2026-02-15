@@ -1,0 +1,16 @@
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# datasets
+data/
+results/
+outputs/
+
+# system
+.DS_Store
+Thumbs.db
