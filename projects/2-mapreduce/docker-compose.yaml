@@ -1,50 +1,93 @@
+version: "3.9"
 
 services:
+
   master:
     build: ./master
+    container_name: master
     ports:
       - "8000:8000"
     volumes:
       - ./data:/data
       - ./apps:/apps
       - ./results:/results
+    networks:
+      - mapreduce
+
   worker1:
     build: ./worker
+    container_name: worker1
     ports:
       - "8001:80"
     volumes:
       - ./data:/data
       - ./apps:/apps
       - ./results:/results
+    networks:
+      - mapreduce
+
   worker2:
     build: ./worker
+    container_name: worker2
     ports:
       - "8002:80"
     volumes:
       - ./data:/data
       - ./apps:/apps
       - ./results:/results
+    networks:
+      - mapreduce
+
   worker3:
     build: ./worker
+    container_name: worker3
     ports:
       - "8003:80"
     volumes:
       - ./data:/data
       - ./apps:/apps
       - ./results:/results
+    networks:
+      - mapreduce
+
   worker4:
     build: ./worker
+    container_name: worker4
     ports:
       - "8004:80"
     volumes:
       - ./data:/data
       - ./apps:/apps
       - ./results:/results
+    networks:
+      - mapreduce
+
   worker5:
     build: ./worker
+    container_name: worker5
     ports:
       - "8005:80"
     volumes:
       - ./data:/data
       - ./apps:/apps
       - ./results:/results
+    networks:
+      - mapreduce
+
+  client:
+    build: ./client
+    container_name: client
+    depends_on:
+      - master
+    volumes:
+      - ./data:/data
+      - ./apps:/apps
+      - ./results:/results
+    stdin_open: true
+    tty: true
+    networks:
+      - mapreduce
+
+networks:
+  mapreduce:
+    driver: bridge
