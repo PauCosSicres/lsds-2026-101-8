@@ -57,6 +57,14 @@ def run_map_task(req: MapRequest):
         reductor_dir = os.path.join(output_dir, f"{reductor}")
         with open(reductor_dir, "a") as append:
             append.write(f"{key} {value}\n")
+    
+    # Notify Master that map is done [Requirement 2.2.4]
+    master_url = f"http://master:8000/jobs/{req.job_id}/map/{req.map_partition}/completed"
+    try:
+        with httpx.Client() as client:
+            client.post(master_url)
+    except Exception as e:
+        print(f"Error notifying master for map: {e}")
 
 @app.get("/map-output")
 def map_output(job_id: str, map_partition: int, partition: int):
@@ -93,13 +101,13 @@ def run_reduce_task(req: ReduceRequest):
     map_function, reduce_function, partition_function = load_app(req.app_name)
     
     # get intermediate outputs
+    result = {} # Initialize result here to ensure it persists outside the URL loop
     for url in req.intermediate_partitions:
         response = httpx.get(url)
         if response.status_code != 200:
             continue
 
         data = response.json()
-        result = {}
 
         for key, values in data.items():
             if key not in result:
@@ -116,3 +124,11 @@ def run_reduce_task(req: ReduceRequest):
             reduced_value = reduce_function(key, values)
             if reduced_value is not None:
                 f.write(f"{key} {reduced_value}\n")
+    
+    # Notify Master that reduce is done
+    master_url = f"http://master:8000/jobs/{req.job_id}/reduce/{req.reduce_partition}/completed"
+    try:
+        with httpx.Client() as client:
+            client.post(master_url)
+    except Exception as e:
+        print(f"Error notifying master for reduce: {e}")

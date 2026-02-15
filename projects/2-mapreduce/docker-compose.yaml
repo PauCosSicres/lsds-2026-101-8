@@ -1,5 +1,13 @@
 
 services:
+  master:
+    build: ./master
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+      - ./apps:/apps
+      - ./results:/results
   worker1:
     build: ./worker
     ports:
