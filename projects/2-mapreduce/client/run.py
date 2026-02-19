@@ -33,7 +33,7 @@ def main():
     reduces = sys.argv[3]
     app = sys.argv[4]
 
-    job_id = create_job(data, maps, reduces, app)
+    job_id = create_job("./data/"+data, maps, reduces, app)
     print(f"job_id: {job_id}")
 
     last_message = ""
