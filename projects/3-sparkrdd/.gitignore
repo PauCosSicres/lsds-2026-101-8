@@ -1,1 +1,7 @@
 conf/*.template
+
+# wikipedia dumps
+data/wikipedia*.json
+
+# spark outputs
+output*/
