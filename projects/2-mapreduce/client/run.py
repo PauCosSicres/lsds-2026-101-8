@@ -2,7 +2,7 @@ import sys
 import time
 import httpx
 
-MASTER = "http://master:8000"
+MASTER = "http://localhost:8000"
 
 
 def create_job(data, maps, reduces, app):
@@ -33,7 +33,7 @@ def main():
     reduces = sys.argv[3]
     app = sys.argv[4]
 
-    job_id = create_job(data, maps, reduces, app)
+    job_id = create_job("./data/"+data, maps, reduces, app)
     print(f"job_id: {job_id}")
 
     last_message = ""

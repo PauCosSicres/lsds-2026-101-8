@@ -42,7 +42,9 @@ def map(req: MapRequest, background_task: BackgroundTasks):
 
 def run_map_task(req: MapRequest):
     try:
-        file_path = f"/data/{req.data_path}/{req.map_partition}"
+        data_path = req.data_path
+        data_path = data_path.replace("./data/", "/data/")
+        file_path = f"{data_path}/{req.map_partition}"
 
         if not os.path.exists(file_path):
             raise Exception(f"File not found: {file_path}")
