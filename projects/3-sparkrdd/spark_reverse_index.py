@@ -14,7 +14,18 @@ def parse_article(line):
         return [(word, docid) for word in words]
     except:
         return []
-
+def parse_article(line):
+    try:
+        obj = json.loads(line)   
+        docid = obj.get("identifier")
+        article_body = obj.get("article_body", {})
+        text = article_body.get("wikitext", "")
+        if not docid or not text:
+            return []
+        words = set(w.lower() for w in WORD_RE.findall(text))
+        return [(word, docid) for word in words]
+    except Exception:
+        return []
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
