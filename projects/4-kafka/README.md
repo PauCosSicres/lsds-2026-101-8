@@ -1282,7 +1282,7 @@ Ask the broker for a vote to become the leader. Returns `true` only IIF:
     "candidate_epoch": 13,
     "last_offset": 18,
     "last_offset_epoch": 12,
-    "candidate_id": "broker-2"
+    "candidate_id": "3"
 }
 ```
 
