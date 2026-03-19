@@ -89,8 +89,8 @@ def topic_exists(topic_name):
 
     return topic_name in topics
 
-def get_partition_path(topic_partition):
-    return f"data/{topic_partition}/00000000000000000000.log"
+def get_partition_path(topic_partition: str):
+    return f"/data/{topic_partition}/partition.log"
 
 # ENDPOINTS
 @app.get("/healthcheck")
@@ -184,64 +184,63 @@ def delete_topic(topic_name: str):
 
 
 @app.post("/data/v1/produce", status_code=204)
-def produce(req: ProduceRequest):
+async def produce(request: ProduceRequest):
     if BROKER_ID != LEADER_BROKER_ID:
-        raise HTTPException(
-            status_code=421,
-            detail=f"leader is {LEADER_BROKER_ID}, can't accept"
-        )
-    topic_partition = req.topic_partition
+        raise HTTPException(status_code=421, detail="Not the leader")
 
-    #ensure directory exists
-    dir_path = f"data/{topic_partition}"
-    os.makedirs(dir_path, exist_ok=True)
-    log_path = get_partition_path(topic_partition)
-
-    #determine offset
+    dir_path = f"/data/{request.topic_partition}"
+    os.makedirs(dir_path, exist_ok=True) 
+    
+    log_path = get_partition_path(request.topic_partition)
+    
     offset = 0
     if os.path.exists(log_path):
         with open(log_path, "r") as f:
-            lines = f.readlines()
-            offset = len(lines)
+            offset = len(f.readlines())
 
-    #append record
     with open(log_path, "a") as f:
-        key = req.key if req.key is not None else "null"
-        f.write(f"{offset} {key} {req.payload}\n")
-    return
+        f.write(f"{offset} {request.key} {request.payload}\n")
+
+    return {"offset": offset}
 
 @app.post("/data/v1/consume")
 def consume(req: ConsumeRequest):
-
     if BROKER_ID != LEADER_BROKER_ID:
-        raise HTTPException(
-            status_code=421,
-            detail=f"leader is {LEADER_BROKER_ID}, can't accept"
-        )
+        raise HTTPException(status_code=421, detail="Not the leader")
+
     log_path = get_partition_path(req.topic_partition)
 
+    # Instead of 404, return empty records if file doesn't exist yet
     if not os.path.exists(log_path):
-        raise HTTPException(status_code=404, detail="partition not found")
+        return {"last_offset": req.last_offset, "records": []}
+
     with open(log_path, "r") as f:
         lines = f.readlines()
 
-    #decide where to start
+    # Determine start index
     start = 0 if req.last_offset == -1 else req.last_offset + 1
-    batch = lines[start:start + req.max_batch_size]
+    batch = lines[start : start + req.max_batch_size]
+    
     records = []
-    last_offset = req.last_offset
+    new_last_offset = req.last_offset
 
     for line in batch:
-        offset, key, payload = line.strip().split(" ", 2)
+        line = line.strip()
+        if not line: continue
+        
+        parts = line.split(" ", 2)
+        if len(parts) < 3: continue
+        
+        off, key, pay = parts
         records.append({
-            "offset": int(offset),
+            "offset": int(off),
             "key": key,
-            "payload": payload
+            "payload": pay
         })
-        last_offset = int(offset)
+        new_last_offset = int(off)
 
     return {
-        "last_offset": last_offset,
+        "last_offset": new_last_offset,
         "records": records
     }
 
