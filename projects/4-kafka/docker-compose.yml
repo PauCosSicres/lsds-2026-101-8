@@ -1,0 +1,40 @@
+services:
+  broker1:
+    build: ./broker
+    ports:
+      - "8001:8000"
+    environment:
+      BROKER_ID: 1
+      LEADER_BROKER_ID: 1
+
+  broker2:
+    build: ./broker
+    ports:
+      - "8002:8000"
+    environment:
+      BROKER_ID: 2
+      LEADER_BROKER_ID: 1
+
+  broker3:
+    build: ./broker
+    ports:
+      - "8003:8000"
+    environment:
+      BROKER_ID: 3
+      LEADER_BROKER_ID: 1
+
+  broker4:
+    build: ./broker
+    ports:
+      - "8004:8000"
+    environment:
+      BROKER_ID: 4
+      LEADER_BROKER_ID: 1
+
+  broker5:
+    build: ./broker
+    ports:
+      - "8005:8000"
+    environment:
+      BROKER_ID: 5
+      LEADER_BROKER_ID: 1
