@@ -11,7 +11,7 @@ Requirements are divided into categories to help you prioritize.
 | 40% | Essential, needed to get something working       | (^)      |
 | 30% | Nice-to-haves, not required to get something working | (^^)     |
 | 30% | Difficult, complex exercises             | (^^^)    |
-| +3/10 (extra) | Advanced, challenges for diving deep       | (^^^^)   |
+| +1.5/10 (extra) | Advanced, challenges for diving deep       | (^^^^)   |
 
 # Submit for grading
 
@@ -46,7 +46,7 @@ This section presents a step by step work breakdown to help you implement SSKafk
 
 Bootstrap a FastAPI service for the broker with a single [GET /healthcheck](#get-healthcheck) endpoint.
 
-Then, create a `docker-compose.yaml` file with 5 brokers in ports 8001 (leader), 8002 (follower), 8003 (follower), 8004 (follower) and 8005 (follower). For now, 8001 will always be the lesder of the cluster.
+Then, create a `docker-compose.yml` file with 5 brokers in ports 8001 (leader), 8002 (follower), 8003 (follower), 8004 (follower) and 8005 (follower). For now, 8001 will always be the lesder of the cluster.
 
 
 > [!TIP]
@@ -121,11 +121,9 @@ class KRaft:
     def __init__(self):
         # TODO
     
-    def append_to_metadata_log(self, action):
+    def append_to_metadata_log(self, action, body):
         # TODO, implement in 4.1.2
 
-    def read_metadata_log(self, from_offset, max_batch_size):
-        # TODO, implement in 4.1.3
 ```
 
 <details>
@@ -278,7 +276,7 @@ curl -X GET "http://localhost:8001/admin/v1/topics" -s | jq
 
 ### [4.1.4] Implement admin API for deleting a topic (^^)
 
-Implement the [DELETE /admin/v1/topics/{topic_name}](#delete-adminv1topicstopic_name) endpoint. You should persist every deleted topic to the [metadata.log](#metadata-log) file.
+Implement the [DELETE /admin/v1/topics/{topic_name}](#delete-adminv1topicstopic_name) endpoint. You should persist every deleted topic to the [__cluster_metadata.log](#metadata-log) file.
 
 > [!WARNING]
 > Make sure the `GET /admin/v1/topics` endpoint works as expected after removing a topic.
@@ -303,7 +301,7 @@ cd client
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python3 create_topic.py mynewtopic -p 3 -r 2
+python3 create_topic.py mynewtopic -p 3
 ```
 
 **expected**
@@ -340,8 +338,8 @@ Implement the [list_topics.py](#list_topicspy) client script.
 **test**
 
 ```zsh
-python3 create_topic.py mynewtopic -p 4 -r 1
-python3 create_topic.py myothernewtopic -p 2 -r 3
+python3 create_topic.py mynewtopic -p 4
+python3 create_topic.py myothernewtopic -p 2
 python3 list_topics.py
 ```
 
@@ -742,7 +740,7 @@ Then, improve the implementation of [POST /data/v1/consume](#post-datav1consume)
 > Take a look at the [Apache Kafka (Control Plane)](https://docs.google.com/presentation/d/1IGJSySZDhnkubCR-aOCekYrfZf0RJbVp_jmBYka_t8Y/edit?usp=sharing) slides to understand the consensus protocol.
 
 
-We recommend that you extend the class you already implemented for handling metadata during 3.3:
+We recommend that you extend the class you already implemented for handling metadata during 4.3:
 
 ```python
 
@@ -800,7 +798,7 @@ class KRaft:
 
 
     def read_metadata_log(self, from_offset, from_offset_epoch, max_batch_size, follower_id):
-        # TODO, extend in 4.3.7
+        # TODO, implement in 4.3.7
 ```
 
 
@@ -980,7 +978,7 @@ Every broker persists in its file system the following data:
 
 #### Metadata log
 
-The metadata log is a file that stores all the system metadata. E.g., every topic that has been created in the system.
+The `__cluster_metadata.log` is a file that stores all the system metadata. E.g., every topic that has been created in the system.
 
 Each line contains the following space separated fields:
 - offset
@@ -1284,7 +1282,7 @@ Ask the broker for a vote to become the leader. Returns `true` only IIF:
     "candidate_epoch": 13,
     "last_offset": 18,
     "last_offset_epoch": 12,
-    "candidate_id": "broker-2"
+    "candidate_id": "3"
 }
 ```
 
@@ -1299,6 +1297,43 @@ Ask the broker for a vote to become the leader. Returns `true` only IIF:
 ```json
 {
     "granted": true
+}
+```
+
+#### POST /kraft/v1/beginQuorumEpoch
+
+
+**request body**
+
+- **leader_id**, the id of the leader broker in the new epoch
+- **leader_epoch**, the epoch
+
+```json
+{
+    "leader_id": "1",
+    "leader_epoch": 11
+}
+```
+
+**response status**
+
+- **200**, the epoch has been accepted or rejected 
+
+**response body**
+
+```json
+{
+    "accepted": true
+}
+```
+
+or
+
+```
+{
+    "accepted": false,
+    "leader_epoch": 13,
+    "leader_id": "2"
 }
 ```
 
@@ -1585,7 +1620,7 @@ Payload: my third message
 - **topic**, the name of the topic
 
 **optional arguments**
-- **-a**, `all` if all brokers must acknowledge storing the record or `0` if it is fire and forget (`all` by default)
+- **-a**, `all` if all brokers must acknowledge storing the record or `1` if it is fire and forget (`all` by default)
 - **-b**, the list of brokers (`1@localhost:8001,2@localhost:8002,3@localhost:8003,4@localhost:8004,5@localhost:8005` by default)
 
 > If the first broker on the broker list (`-b`) is not the leader (i.e. it returns a 421), the client should send the request to the leader.
